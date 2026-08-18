@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Política de Privacidade — Stream for All</title>
+  <style>
+    body {
+      margin: 0 auto; max-width: 720px; padding: 48px 24px;
+      background: #0b0c0e; color: #edeef0;
+      font-family: -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.65;
+    }
+    h1 { font-size: 28px; letter-spacing: -.01em; }
+    h2 { font-size: 19px; margin-top: 36px; }
+    p, li { color: #b8bcc4; font-size: 15px; }
+    strong { color: #edeef0; }
+    a { color: #4ea1ff; }
+    .updated { color: #8a8f98; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Política de Privacidade — Stream for All</h1>
+  <p class="updated">Última atualização: 19 de agosto de 2026</p>
+
+  <p><strong>Resumo: o Stream for All não coleta, não armazena e não transmite nenhum dado do usuário para o desenvolvedor ou para terceiros.</strong> Não há servidores próprios, não há contas, não há análise de uso (analytics) e não há anúncios.</p>
+
+  <h2>Dados armazenados apenas no seu dispositivo</h2>
+  <ul>
+    <li><strong>Apelido</strong> — o nome que você escolhe ao usar a extensão.</li>
+    <li><strong>Identidade criptográfica</strong> — um par de chaves gerado localmente, usado para verificar membros das salas.</li>
+    <li><strong>Salas</strong> — a lista de salas que você criou ou entrou.</li>
+  </ul>
+  <p>Essas informações ficam no armazenamento local do navegador (<code>chrome.storage.local</code>), nunca saem do seu dispositivo para o desenvolvedor e são removidas ao desinstalar a extensão.</p>
+
+  <h2>O que é transmitido — e para quem</h2>
+  <ul>
+    <li><strong>Transmissão de tela e áudio</strong> — enviada diretamente do seu dispositivo para os dispositivos dos membros da sala (conexão peer-to-peer via WebRTC, criptografada). Nada passa por servidores de mídia e nada é gravado pela extensão.</li>
+    <li><strong>Apelido e presença</strong> — compartilhados apenas com os membros da sala, pela mesma conexão direta.</li>
+    <li><strong>Sinalização de conexão</strong> — para que os participantes se encontrem, a extensão troca mensagens criptografadas por relays públicos do protocolo Nostr. Os relays não conseguem ler o conteúdo dessas mensagens nem acessar sua transmissão.</li>
+  </ul>
+  <p>Toda transmissão é iniciada por você, vai somente para pessoas aprovadas pelo anfitrião da sala e termina quando você para de compartilhar.</p>
+
+  <h2>Permissões utilizadas</h2>
+  <ul>
+    <li><strong>storage</strong> — guardar apelido, identidade e salas localmente.</li>
+    <li><strong>activeTab</strong> — detectar o servidor do Discord aberto, apenas para dar contexto ao nome da sala. Nenhum conteúdo da aba é lido ou transmitido.</li>
+    <li><strong>Content script em nossa própria página</strong> (leocoout.github.io/stream-for-all) — abrir automaticamente uma sala quando você clica em um link de convite.</li>
+  </ul>
+
+  <h2>O que nunca fazemos</h2>
+  <ul>
+    <li>Não coletamos informações pessoais, histórico de navegação ou atividade do usuário.</li>
+    <li>Não vendemos nem transferimos dados a terceiros.</li>
+    <li>Não usamos dados para publicidade, análise de crédito ou qualquer fim além do único objetivo da extensão: compartilhamento de tela entre amigos.</li>
+  </ul>
+
+  <h2>Contato</h2>
+  <p>Dúvidas sobre esta política: <a href="mailto:leocoutbrasil@gmail.com">leocoutbrasil@gmail.com</a></p>
+</body>
+</html>
