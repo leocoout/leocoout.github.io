@@ -16,6 +16,19 @@
       background: #121316; border: 1px solid #ffffff14; border-radius: 14px;
     }
     .logo { height: 34px; width: auto; margin: 0 auto 14px; display: block; }
+    .bg-pattern {
+      position: fixed; inset: -50%; z-index: -1; pointer-events: none;
+      background-color: #edeef0; opacity: .01;
+      transform: rotate(-14deg);
+      -webkit-mask-image: url(logo_icon_tile.png), url(logo_icon_tile.png);
+      mask-image: url(logo_icon_tile.png), url(logo_icon_tile.png);
+      -webkit-mask-size: 120px 120px, 120px 120px;
+      mask-size: 120px 120px, 120px 120px;
+      -webkit-mask-position: 0 0, 60px 60px;
+      mask-position: 0 0, 60px 60px;
+      -webkit-mask-repeat: repeat, repeat;
+      mask-repeat: repeat, repeat;
+    }
     p { color: #8a8f98; font-size: 14px; line-height: 1.5; margin: 0 0 18px; }
     a.btn {
       display: inline-block; text-decoration: none; padding: 11px 18px; border-radius: 10px;
@@ -24,6 +37,7 @@
   </style>
 </head>
 <body>
+  <div class="bg-pattern" aria-hidden="true"></div>
   <div class="card">
     <img class="logo" src="logo_dark.png" alt="Stream for All" />
     <p id="msg">Abrindo a sala…</p>
