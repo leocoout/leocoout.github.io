@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Política de Privacidade — Stream for All</title>
+  <title>Política de Privacidade do Stream for All</title>
   <style>
     body {
       margin: 0 auto; max-width: 720px; padding: 48px 24px;
@@ -19,42 +19,44 @@
   </style>
 </head>
 <body>
-  <h1>Política de Privacidade — Stream for All</h1>
+  <h1>Política de Privacidade do Stream for All</h1>
   <p class="updated">Última atualização: 19 de agosto de 2026</p>
 
-  <p><strong>Resumo: o Stream for All não coleta, não armazena e não transmite nenhum dado do usuário para o desenvolvedor ou para terceiros.</strong> Não há servidores próprios, não há contas, não há análise de uso (analytics) e não há anúncios.</p>
+  <p><strong>O Stream for All não coleta dados do usuário.</strong> A extensão não envia dados para o desenvolvedor ou para terceiros. A extensão não tem servidores próprios, contas, anúncios ou ferramentas de análise.</p>
 
-  <h2>Dados armazenados apenas no seu dispositivo</h2>
+  <h2>Dados que ficam no seu dispositivo</h2>
+  <p>A extensão guarda estes dados no armazenamento local do navegador:</p>
   <ul>
-    <li><strong>Apelido</strong> — o nome que você escolhe ao usar a extensão.</li>
-    <li><strong>Identidade criptográfica</strong> — um par de chaves gerado localmente, usado para verificar membros das salas.</li>
-    <li><strong>Salas</strong> — a lista de salas que você criou ou entrou.</li>
+    <li><strong>Apelido:</strong> o nome que você escolhe.</li>
+    <li><strong>Identidade criptográfica:</strong> um par de chaves gerado no seu dispositivo. A extensão usa as chaves para verificar os membros das salas.</li>
+    <li><strong>Salas:</strong> a lista de salas que você criou ou entrou.</li>
   </ul>
-  <p>Essas informações ficam no armazenamento local do navegador (<code>chrome.storage.local</code>), nunca saem do seu dispositivo para o desenvolvedor e são removidas ao desinstalar a extensão.</p>
+  <p>Esses dados não saem do seu dispositivo para o desenvolvedor. O navegador remove esses dados quando você desinstala a extensão.</p>
 
-  <h2>O que é transmitido — e para quem</h2>
+  <h2>Dados que a extensão transmite</h2>
   <ul>
-    <li><strong>Transmissão de tela e áudio</strong> — enviada diretamente do seu dispositivo para os dispositivos dos membros da sala (conexão peer-to-peer via WebRTC, criptografada). Nada passa por servidores de mídia e nada é gravado pela extensão.</li>
-    <li><strong>Apelido e presença</strong> — compartilhados apenas com os membros da sala, pela mesma conexão direta.</li>
-    <li><strong>Sinalização de conexão</strong> — para que os participantes se encontrem, a extensão troca mensagens criptografadas por relays públicos do protocolo Nostr. Os relays não conseguem ler o conteúdo dessas mensagens nem acessar sua transmissão.</li>
+    <li><strong>Tela e áudio:</strong> a extensão envia a transmissão do seu dispositivo para os dispositivos dos membros da sala. A conexão é direta (WebRTC) e criptografada. A transmissão não passa por servidores de mídia. A extensão não grava a transmissão.</li>
+    <li><strong>Apelido e presença:</strong> a extensão envia esses dados apenas para os membros da sala, pela mesma conexão direta.</li>
+    <li><strong>Sinalização de conexão:</strong> a extensão troca mensagens criptografadas por relays públicos do protocolo Nostr para conectar os participantes. Os relays não podem ler essas mensagens. Os relays não têm acesso à transmissão.</li>
   </ul>
-  <p>Toda transmissão é iniciada por você, vai somente para pessoas aprovadas pelo anfitrião da sala e termina quando você para de compartilhar.</p>
+  <p>Você inicia cada transmissão. A extensão envia a transmissão apenas para pessoas que o anfitrião aprovou. A transmissão termina quando você para de compartilhar.</p>
 
-  <h2>Permissões utilizadas</h2>
+  <h2>Permissões</h2>
   <ul>
-    <li><strong>storage</strong> — guardar apelido, identidade e salas localmente.</li>
-    <li><strong>activeTab</strong> — detectar o servidor do Discord aberto, apenas para dar contexto ao nome da sala. Nenhum conteúdo da aba é lido ou transmitido.</li>
-    <li><strong>Comunicação com nossa própria página</strong> (leocoout.github.io/stream-for-all) — a página de convite pode pedir à extensão que abra a sala correspondente quando você clica em um link de convite. Nenhum outro site pode se comunicar com a extensão.</li>
+    <li><strong>storage:</strong> guardar apelido, identidade e salas no seu dispositivo.</li>
+    <li><strong>activeTab:</strong> identificar o servidor do Discord aberto para nomear a sala. A extensão não lê e não transmite o conteúdo da aba.</li>
+    <li><strong>Comunicação com nossa página</strong> (leocoout.github.io/stream-for-all): a página de convite pode pedir à extensão para abrir uma sala. Nenhum outro site pode se comunicar com a extensão.</li>
   </ul>
 
-  <h2>O que nunca fazemos</h2>
+  <h2>O que a extensão não faz</h2>
   <ul>
-    <li>Não coletamos informações pessoais, histórico de navegação ou atividade do usuário.</li>
-    <li>Não vendemos nem transferimos dados a terceiros.</li>
-    <li>Não usamos dados para publicidade, análise de crédito ou qualquer fim além do único objetivo da extensão: compartilhamento de tela entre amigos.</li>
+    <li>Não coleta informações pessoais, histórico de navegação ou atividade do usuário.</li>
+    <li>Não vende e não transfere dados para terceiros.</li>
+    <li>Não usa dados para publicidade ou análise de crédito.</li>
+    <li>Não usa dados para nenhum fim além do compartilhamento de tela entre amigos.</li>
   </ul>
 
   <h2>Contato</h2>
-  <p>Dúvidas sobre esta política: <a href="mailto:leocoutbrasil@gmail.com">leocoutbrasil@gmail.com</a></p>
+  <p>Envie dúvidas sobre esta política para <a href="mailto:leocoutbrasil@gmail.com">leocoutbrasil@gmail.com</a>.</p>
 </body>
 </html>
