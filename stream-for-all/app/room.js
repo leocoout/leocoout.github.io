@@ -469,7 +469,7 @@ function renderSidebar() {
   renderMemberSidebar(el("member-list"), {
     members, liveMembers, watching,
     online: new Set([...peerPub.values()].map((v) => v.pubId)),
-    mePub: id.pubId, hostPub: group.founderPub,
+    mePub: id.pubId, hostPub: group.founderPub, pingMs,
     onWatch: startWatch, onStop: stopWatch
   });
 }

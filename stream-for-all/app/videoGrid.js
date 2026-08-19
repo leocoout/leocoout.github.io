@@ -7,7 +7,6 @@ let focusedKey = null;
 let pendingLive = [];
 const liveBlocks = new Map();
 const GAP = 12;
-const CONTROLS_RESERVE = 78;
 
 const stageTiles = () => [...zoomStage.children].filter((c) => c.id?.startsWith("tile-"));
 
@@ -182,7 +181,7 @@ function fitStage() {
   const blocks = [...liveBlocks.values()];
   if (!tiles.length && !blocks.length) return;
   const W = zoomStage.clientWidth;
-  const H = zoomStage.clientHeight - CONTROLS_RESERVE;
+  const H = zoomStage.clientHeight;
 
   const focused = focusedKey ? tiles.find((t) => t.id === "tile-" + focusedKey) : null;
   let main, rest;
@@ -216,21 +215,19 @@ function updateZoomMode() {
     for (const t of [...stageTiles(), ...grid.children]) {
       t.setZoomed?.(blockMode && t.id === "tile-" + focusedKey);
     }
-    const floating = document.getElementById("floating-controls");
+    const sidebarControls = document.getElementById("sidebar-controls");
     const roomActions = document.getElementById("room-actions");
     const headerActions = document.getElementById("header-actions");
     const header = document.getElementById("room-header");
     const footer = document.getElementById("room-footer");
     const sidebarFooter = document.getElementById("sidebar-footer");
     const roomPanel = document.getElementById("room-panel");
-    if (floating && roomActions && headerActions && header && roomCard) {
+    if (sidebarControls && roomActions && headerActions && header && roomCard) {
       if (blockMode) {
-        floating.hidden = false;
-        if (roomActions.parentElement !== floating) floating.appendChild(roomActions);
-        if (headerActions.parentElement !== floating) floating.appendChild(headerActions);
+        if (roomActions.parentElement !== sidebarControls) sidebarControls.appendChild(roomActions);
+        if (headerActions.parentElement !== sidebarControls) sidebarControls.appendChild(headerActions);
         if (footer && sidebarFooter && footer.parentElement !== sidebarFooter) sidebarFooter.appendChild(footer);
       } else {
-        floating.hidden = true;
         if (roomActions.parentElement !== roomCard) roomCard.insertBefore(roomActions, document.getElementById("waiting"));
         if (headerActions.parentElement !== header) header.appendChild(headerActions);
         if (footer && roomPanel && footer.parentElement !== roomPanel) roomPanel.appendChild(footer);

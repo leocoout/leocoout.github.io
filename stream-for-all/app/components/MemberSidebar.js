@@ -1,10 +1,10 @@
 import { Avatar, colorFor } from "./Avatar.js";
-import { LiveBadge } from "./Badge.js";
+import { LiveBadge, HostBadge } from "./Badge.js";
 import { Icon } from "./icons.js";
 import { T } from "../strings.js";
 
 export function renderMemberSidebar(container, {
-  members, liveMembers, watching, online, mePub, hostPub, onWatch, onStop
+  members, liveMembers, watching, online, mePub, hostPub, pingMs, onWatch, onStop
 } = {}) {
   container.replaceChildren();
 
@@ -39,12 +39,18 @@ export function renderMemberSidebar(container, {
 
     row.append(av, label);
 
-    if (pub === hostPub) {
-      const crown = Icon("crown", { size: 13 });
-      crown.style.color = "var(--muted-fg)";
-      crown.style.flex = "0 0 auto";
-      row.appendChild(crown);
+    const ping = pingMs?.get(pub);
+    if (typeof ping === "number" && pub !== hostPub) {
+      const p = document.createElement("span");
+      p.textContent = T.room.ping(Math.round(ping));
+      Object.assign(p.style, {
+        fontSize: "11px", fontWeight: "600", fontVariantNumeric: "tabular-nums", flex: "0 0 auto",
+        color: ping < 80 ? "var(--muted-fg)" : ping < 200 ? "#faa61a" : "var(--destructive)"
+      });
+      row.appendChild(p);
     }
+
+    if (pub === hostPub) row.appendChild(HostBadge());
 
     if (isLive) {
       row.appendChild(LiveBadge());
