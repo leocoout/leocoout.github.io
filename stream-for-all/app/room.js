@@ -534,6 +534,8 @@ function setupRoomChrome() {
 
 function updateStreamControls() {
   if (gearBtn) gearBtn.hidden = !localStream;
+  const slot = el("stream-settings-slot");
+  if (slot) slot.hidden = !localStream;
 }
 
 function roomMenuItems() {
