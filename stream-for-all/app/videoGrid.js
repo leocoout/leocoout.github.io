@@ -58,8 +58,18 @@ export function removeVideo(key) {
 
 function updateZoomMode() {
   if (zoomStage) {
-    zoomStage.hidden = zoomStage.children.length === 0;
-    roomCard?.classList.toggle("zoom-mode", zoomStage.children.length > 0);
+    const zoomOn = zoomStage.children.length > 0;
+    zoomStage.hidden = !zoomOn;
+    roomCard?.classList.toggle("zoom-mode", zoomOn);
+    const roomActions = document.getElementById("room-actions");
+    const headerActions = document.getElementById("header-actions");
+    if (roomActions && headerActions && roomCard) {
+      if (zoomOn && roomActions.parentElement !== headerActions.parentElement) {
+        headerActions.parentElement.insertBefore(roomActions, headerActions);
+      } else if (!zoomOn && roomActions.parentElement !== roomCard) {
+        roomCard.insertBefore(roomActions, document.getElementById("waiting"));
+      }
+    }
   }
   updateEmpty();
 }
