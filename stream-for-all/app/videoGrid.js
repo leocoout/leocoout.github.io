@@ -43,6 +43,7 @@ export function attachVideo(key, label, stream, muted = false, { onStop = null, 
   if (document.hidden) video.autoplay = false;
   video.addEventListener("loadedmetadata", fitStage);
   (blockMode ? zoomStage : grid).appendChild(tile);
+  if (blockMode) enterAnim(tile);
   updateZoomMode();
 }
 
@@ -64,6 +65,7 @@ function syncLiveBlocks() {
       b.id = "liveblock-" + p.pub;
       liveBlocks.set(p.pub, b);
       zoomStage.appendChild(b);
+      enterAnim(b);
     }
   }
 }
@@ -86,6 +88,13 @@ export function toggleGridView() {
   setBlockMode(!blockMode);
 }
 
+function enterAnim(t) {
+  t.classList.add("stage-enter");
+  const done = () => t.classList.remove("stage-enter");
+  t.addEventListener("animationend", done, { once: true });
+  setTimeout(done, 700);
+}
+
 function clearInline(t) {
   t.style.position = "relative"; t.style.left = ""; t.style.top = "";
   t.style.width = ""; t.style.height = ""; t.style.flex = ""; t.style.order = "";
@@ -96,7 +105,10 @@ function setBlockMode(on) {
   if (!on) focusedKey = null;
   const dest = on ? zoomStage : grid;
   for (const t of [...stageTiles(), ...grid.children]) {
-    if (t.parentElement !== dest) dest.appendChild(t);
+    if (t.parentElement !== dest) {
+      dest.appendChild(t);
+      if (on) enterAnim(t);
+    }
   }
   if (!on) {
     for (const t of dest.children) {
