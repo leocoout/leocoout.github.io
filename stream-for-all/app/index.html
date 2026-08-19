@@ -69,7 +69,8 @@
       transition: none !important;
       animation: sfa-fade-up .38s cubic-bezier(.22, .7, .3, 1) .12s backwards;
     }
-    #room-card.zoom-mode #zoom-stage video { width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto; }
+    #room-card.zoom-mode #zoom-stage video { width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto; transition: filter .15s ease; }
+    #room-card.zoom-mode #zoom-stage > [data-zoomable]:hover video { filter: brightness(.75); }
 
     #room-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
     #header-actions { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
