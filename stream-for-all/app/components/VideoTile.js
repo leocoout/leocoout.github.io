@@ -76,5 +76,8 @@ export function VideoTile({ id, label, stream, muted = false, onStop = null, onZ
     zoomBtn.title = z ? T.room.shrink : T.room.expand;
     zoomBtn.querySelector("svg").replaceWith(Icon(z ? "minimize" : "maximize", { size: 15 }));
   };
+  tile.setZoomVisible = (v) => {
+    if (zoomBtn) zoomBtn.style.display = v ? "grid" : "none";
+  };
   return tile;
 }

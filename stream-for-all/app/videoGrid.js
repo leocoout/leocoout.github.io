@@ -1,13 +1,12 @@
 import { VideoTile } from "./components/VideoTile.js";
 import { LiveBlock } from "./components/LiveBlock.js";
 
-let grid, emptyHint, thumbs, roomCard, zoomStage, breakEl;
+let grid, emptyHint, thumbs, roomCard, zoomStage;
 let blockMode = false;
 let focusedKey = null;
 let pendingLive = [];
 const liveBlocks = new Map();
 const GAP = 12;
-const REST_HEIGHT = 120;
 const CONTROLS_RESERVE = 78;
 
 const stageTiles = () => [...zoomStage.children].filter((c) => c.id?.startsWith("tile-"));
@@ -18,9 +17,6 @@ export function initVideoGrid(refs) {
   thumbs = refs.thumbs;
   roomCard = refs.roomCard;
   zoomStage = refs.zoomStage;
-  breakEl = document.createElement("div");
-  Object.assign(breakEl.style, { flexBasis: "100%", height: "0", order: "1", display: "none" });
-  zoomStage.appendChild(breakEl);
   if (typeof ResizeObserver !== "undefined") {
     new ResizeObserver(fitStage).observe(zoomStage);
   }
@@ -91,6 +87,11 @@ export function toggleGridView() {
   setBlockMode(!blockMode);
 }
 
+function clearInline(t) {
+  t.style.position = ""; t.style.left = ""; t.style.top = "";
+  t.style.width = ""; t.style.height = ""; t.style.flex = ""; t.style.order = "";
+}
+
 function setBlockMode(on) {
   blockMode = on;
   if (!on) focusedKey = null;
@@ -100,7 +101,8 @@ function setBlockMode(on) {
   }
   if (!on) {
     for (const t of dest.children) {
-      t.style.width = ""; t.style.height = ""; t.style.flex = ""; t.style.order = "";
+      clearInline(t);
+      t.setZoomVisible?.(true);
     }
   }
   syncLiveBlocks();
@@ -120,41 +122,57 @@ function ratioOf(elm) {
   return 16 / 10;
 }
 
-function gridLayout(items, W, H) {
+function place(elm, x, y, w, h) {
+  Object.assign(elm.style, {
+    position: "absolute",
+    left: Math.floor(x) + "px", top: Math.floor(y) + "px",
+    width: Math.floor(w) + "px", height: Math.floor(h) + "px"
+  });
+}
+
+function placeGrid(items, areaX, areaY, areaW, areaH) {
   const n = items.length;
   const ratios = items.map(ratioOf);
   let best = null;
   for (let rows = 1; rows <= n; rows++) {
     const cols = Math.ceil(n / rows);
-    const cw = (W - GAP * (cols - 1)) / cols;
-    const ch = (H - GAP * (rows - 1)) / rows;
+    const cw = (areaW - GAP * (cols - 1)) / cols;
+    const ch = (areaH - GAP * (rows - 1)) / rows;
     if (cw <= 0 || ch <= 0) continue;
     let area = 0;
-    const sizes = ratios.map((ar) => {
+    for (const ar of ratios) {
       const w = Math.min(cw, ch * ar);
       area += w * (w / ar);
-      return w;
-    });
-    if (!best || area > best.area) best = { area, sizes };
+    }
+    if (!best || area > best.area) best = { area, rows, cols, cw, ch };
   }
   if (!best) return;
+  const { rows, cols, cw, ch } = best;
   items.forEach((t, i) => {
-    t.style.width = Math.floor(best.sizes[i]) + "px";
-    t.style.height = Math.floor(best.sizes[i] / ratios[i]) + "px";
-    t.style.order = "0";
-    t.style.flex = "0 0 auto";
+    const row = Math.floor(i / cols);
+    const inRow = row === rows - 1 ? n - row * cols : cols;
+    const col = i % cols;
+    const rowW = inRow * cw + (inRow - 1) * GAP;
+    const cellX = areaX + (areaW - rowW) / 2 + col * (cw + GAP);
+    const cellY = areaY + row * (ch + GAP);
+    const ar = ratios[i];
+    const w = Math.min(cw, ch * ar);
+    const h = w / ar;
+    place(t, cellX + (cw - w) / 2, cellY + (ch - h) / 2, w, h);
   });
 }
 
-function rowLayout(items, W, rowH) {
-  const widths = items.map((t) => rowH * ratioOf(t));
-  const total = widths.reduce((a, b) => a + b, 0) + GAP * (items.length - 1);
-  const scale = total > W ? (W - GAP * (items.length - 1)) / (total - GAP * (items.length - 1)) : 1;
+function placeColumn(items, x, colW, areaH) {
+  const gaps = GAP * (items.length - 1);
+  const natural = items.map((t) => colW / ratioOf(t));
+  const totalH = natural.reduce((a, b) => a + b, 0);
+  const scale = totalH + gaps > areaH ? (areaH - gaps) / totalH : 1;
+  const w = colW * scale;
+  let y = Math.max(0, (areaH - (totalH * scale + gaps)) / 2);
   items.forEach((t, i) => {
-    t.style.width = Math.floor(widths[i] * scale) + "px";
-    t.style.height = Math.floor(rowH * scale) + "px";
-    t.style.order = "2";
-    t.style.flex = "0 0 auto";
+    const h = natural[i] * scale;
+    place(t, x + (colW - w) / 2, y, w, h);
+    y += h + GAP;
   });
 }
 
@@ -178,12 +196,15 @@ function fitStage() {
     rest = blocks;
   }
 
-  const rowH = rest.length ? Math.min(REST_HEIGHT, H * 0.25) : 0;
-  const mainH = rest.length ? H - rowH - GAP * 2 : H;
+  const colW = rest.length ? Math.min(220, Math.max(160, W * 0.16)) : 0;
+  const mainW = rest.length ? W - colW - GAP * 2 : W;
 
-  gridLayout(main, W, mainH);
-  if (rest.length) rowLayout(rest, W, rowH);
-  breakEl.style.display = rest.length ? "block" : "none";
+  placeGrid(main, 0, 0, mainW, H);
+  if (rest.length) placeColumn(rest, mainW + GAP * 2, colW, H);
+
+  for (const t of tiles) {
+    t.setZoomVisible?.(!(main.length === 1 && main[0] === t));
+  }
 }
 
 function updateZoomMode() {

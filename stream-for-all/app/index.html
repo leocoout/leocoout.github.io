@@ -47,10 +47,10 @@
     #room-card.zoom-mode #sidebar-footer #room-footer { margin-top: 0; padding: 0; }
     #room-card.zoom-mode #zoom-stage {
       flex: 1; min-height: 0; margin: 0;
-      display: flex; flex-wrap: wrap;
-      align-items: center; justify-content: center; align-content: center;
-      gap: 12px;
-      padding-bottom: 78px; box-sizing: border-box;
+      position: relative; display: block;
+    }
+    #room-card.zoom-mode #zoom-stage > * {
+      transition: left .3s ease, top .3s ease, width .3s ease, height .3s ease;
     }
     #room-card.zoom-mode #zoom-stage video { width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto; }
     #room-card.zoom-mode #floating-controls {
