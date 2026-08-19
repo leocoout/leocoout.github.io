@@ -178,18 +178,28 @@ function placeGrid(items, areaX, areaY, areaW, areaH) {
   }
   if (!best) return;
   const { rows, cols, cw, ch } = best;
-  items.forEach((t, i) => {
-    const row = Math.floor(i / cols);
-    const inRow = row === rows - 1 ? n - row * cols : cols;
-    const col = i % cols;
-    const rowW = inRow * cw + (inRow - 1) * GAP;
-    const cellX = areaX + (areaW - rowW) / 2 + col * (cw + GAP);
-    const cellY = areaY + row * (ch + GAP);
-    const ar = ratios[i];
+  const sizes = ratios.map((ar) => {
     const w = Math.min(cw, ch * ar);
-    const h = w / ar;
-    place(t, cellX + (cw - w) / 2, cellY + (ch - h) / 2, w, h);
+    return [w, w / ar];
   });
+  const rowHeights = [];
+  for (let r = 0; r < rows; r++) {
+    const rowItems = sizes.slice(r * cols, (r + 1) * cols);
+    rowHeights.push(Math.max(...rowItems.map(([, h]) => h)));
+  }
+  const totalH = rowHeights.reduce((a, b) => a + b, 0) + GAP * (rows - 1);
+  let y = areaY + (areaH - totalH) / 2;
+  for (let r = 0; r < rows; r++) {
+    const start = r * cols;
+    const rowItems = sizes.slice(start, start + cols);
+    const rowW = rowItems.reduce((a, [w]) => a + w, 0) + GAP * (rowItems.length - 1);
+    let x = areaX + (areaW - rowW) / 2;
+    rowItems.forEach(([w, h], j) => {
+      place(items[start + j], x, y + (rowHeights[r] - h) / 2, w, h);
+      x += w + GAP;
+    });
+    y += rowHeights[r] + GAP;
+  }
 }
 
 function placeColumn(items, x, colW, areaH) {
