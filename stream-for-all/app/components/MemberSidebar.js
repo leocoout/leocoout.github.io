@@ -29,26 +29,31 @@ export function renderMemberSidebar(container, {
     const av = Avatar({ initial: name[0] || "?", color: colorFor(pub || name), size: 28 });
     av.style.flex = "0 0 auto";
 
+    const info = document.createElement("div");
+    Object.assign(info.style, { flex: "1", minWidth: "0" });
+
     const label = document.createElement("div");
     label.textContent = isMe ? T.room.you(name) : name;
     Object.assign(label.style, {
-      flex: "1", minWidth: "0", fontSize: "13px", fontWeight: "500", color: "var(--fg)",
+      fontSize: "13px", fontWeight: "500", color: "var(--fg)",
       overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
       opacity: isMe || online.has(pub) ? "1" : ".45"
     });
-
-    row.append(av, label);
+    info.appendChild(label);
 
     const ping = pingMs?.get(pub);
     if (typeof ping === "number" && pub !== hostPub) {
-      const p = document.createElement("span");
+      const p = document.createElement("div");
       p.textContent = T.room.ping(Math.round(ping));
       Object.assign(p.style, {
-        fontSize: "11px", fontWeight: "600", fontVariantNumeric: "tabular-nums", flex: "0 0 auto",
+        fontSize: "10px", fontWeight: "400", fontVariantNumeric: "tabular-nums",
+        marginTop: "1px",
         color: ping < 80 ? "var(--muted-fg)" : ping < 200 ? "#faa61a" : "var(--destructive)"
       });
-      row.appendChild(p);
+      info.appendChild(p);
     }
+
+    row.append(av, info);
 
     if (pub === hostPub) row.appendChild(HostBadge());
 
