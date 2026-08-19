@@ -2,6 +2,7 @@ import { VideoTile } from "./components/VideoTile.js";
 
 let grid, emptyHint, thumbs, roomCard, zoomStage;
 let blockMode = false;
+const GAP = 12;
 
 export function initVideoGrid(refs) {
   grid = refs.grid;
@@ -9,6 +10,9 @@ export function initVideoGrid(refs) {
   thumbs = refs.thumbs;
   roomCard = refs.roomCard;
   zoomStage = refs.zoomStage;
+  if (zoomStage && typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(fitStage).observe(zoomStage);
+  }
   document.addEventListener("visibilitychange", () => {
     const hidden = document.hidden;
     for (const v of document.querySelectorAll("#grid video, #zoom-stage video")) {
@@ -27,9 +31,11 @@ export function attachVideo(key, label, stream, muted = false, { onStop = null, 
   const tile = VideoTile({
     id: key, label, stream, muted,
     onStop,
-    onZoom: zoomable ? () => toggleZoom(key) : null
+    onZoom: zoomable ? () => toggleZoom() : null
   });
-  if (document.hidden) tile.querySelector("video").autoplay = false;
+  const video = tile.querySelector("video");
+  if (document.hidden) video.autoplay = false;
+  video.addEventListener("loadedmetadata", fitStage);
   (blockMode ? zoomStage : grid).appendChild(tile);
   tile.setZoomed?.(blockMode);
   updateZoomMode();
@@ -45,30 +51,73 @@ function setBlockMode(on) {
   for (const t of [...zoomStage.children, ...grid.children]) {
     if (t.parentElement !== dest) dest.appendChild(t);
   }
-  for (const t of dest.children) t.setZoomed?.(on);
+  for (const t of dest.children) {
+    t.setZoomed?.(on);
+    if (!on) { t.style.width = ""; t.style.height = ""; t.style.flex = ""; }
+  }
   for (const v of dest.querySelectorAll("video")) v.play().catch(() => {});
   updateZoomMode();
 }
 
 export function removeVideo(key) {
   document.getElementById("tile-" + key)?.remove();
-  if (blockMode && zoomStage.children.length === 0) setBlockMode(false);
-  else updateZoomMode();
+  updateZoomMode();
+}
+
+function fitStage() {
+  if (!blockMode || !zoomStage) return;
+  const tiles = [...zoomStage.children];
+  if (!tiles.length) return;
+  const W = zoomStage.clientWidth;
+  const H = zoomStage.clientHeight;
+  const n = tiles.length;
+  const ratios = tiles.map((t) => {
+    const v = t.querySelector("video");
+    return (v?.videoWidth || 1280) / (v?.videoHeight || 720);
+  });
+  let best = null;
+  for (let rows = 1; rows <= n; rows++) {
+    const cols = Math.ceil(n / rows);
+    const cw = (W - GAP * (cols - 1)) / cols;
+    const ch = (H - GAP * (rows - 1)) / rows;
+    if (cw <= 0 || ch <= 0) continue;
+    let area = 0;
+    const sizes = ratios.map((ar) => {
+      const w = Math.min(cw, ch * ar);
+      const h = w / ar;
+      area += w * h;
+      return [w, h];
+    });
+    if (!best || area > best.area) best = { area, sizes };
+  }
+  if (!best) return;
+  tiles.forEach((t, i) => {
+    t.style.width = Math.floor(best.sizes[i][0]) + "px";
+    t.style.height = Math.floor(best.sizes[i][1]) + "px";
+    t.style.flex = "0 0 auto";
+  });
 }
 
 function updateZoomMode() {
   if (zoomStage) {
     zoomStage.hidden = zoomStage.children.length === 0;
     roomCard?.classList.toggle("zoom-mode", blockMode);
+    const floating = document.getElementById("floating-controls");
     const roomActions = document.getElementById("room-actions");
     const headerActions = document.getElementById("header-actions");
-    if (roomActions && headerActions && roomCard) {
-      if (blockMode && roomActions.parentElement !== headerActions.parentElement) {
-        headerActions.parentElement.insertBefore(roomActions, headerActions);
-      } else if (!blockMode && roomActions.parentElement !== roomCard) {
-        roomCard.insertBefore(roomActions, document.getElementById("waiting"));
+    const header = document.getElementById("room-header");
+    if (floating && roomActions && headerActions && header && roomCard) {
+      if (blockMode) {
+        floating.hidden = false;
+        if (roomActions.parentElement !== floating) floating.appendChild(roomActions);
+        if (headerActions.parentElement !== floating) floating.appendChild(headerActions);
+      } else {
+        floating.hidden = true;
+        if (roomActions.parentElement !== roomCard) roomCard.insertBefore(roomActions, document.getElementById("waiting"));
+        if (headerActions.parentElement !== header) header.appendChild(headerActions);
       }
     }
+    if (blockMode) fitStage();
   }
   updateEmpty();
 }

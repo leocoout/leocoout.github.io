@@ -34,6 +34,7 @@ export const T = {
     approve: "Aprovar",
     clickToWatch: "Clique para assistir",
     watch: "Assistir",
+    gridView: "Visão em grade",
     stopWatching: "Parar de assistir",
     expand: "Ampliar",
     shrink: "Reduzir",
