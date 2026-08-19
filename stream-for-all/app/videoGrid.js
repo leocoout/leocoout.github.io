@@ -233,9 +233,9 @@ function updateZoomMode() {
         if (footer && roomPanel && footer.parentElement !== roomPanel) roomPanel.appendChild(footer);
       }
     }
-    if (blockMode) fitStage();
   }
   updateEmpty();
+  if (blockMode && zoomStage) fitStage();
 }
 
 export function updateEmpty() {
