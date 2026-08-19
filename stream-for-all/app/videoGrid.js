@@ -43,7 +43,7 @@ export function attachVideo(key, label, stream, muted = false, { onStop = null, 
   if (document.hidden) video.autoplay = false;
   video.addEventListener("loadedmetadata", fitStage);
   (blockMode ? zoomStage : grid).appendChild(tile);
-  if (blockMode) enterAnim(tile);
+  if (blockMode && !(key.startsWith("watch-") && wasSwapped(key.slice(6)))) enterAnim(tile);
   updateZoomMode();
 }
 
@@ -56,7 +56,7 @@ export function setPendingLive(list) {
 function syncLiveBlocks() {
   const want = new Set(blockMode ? pendingLive.map((p) => p.pub) : []);
   for (const [pub, elBlock] of liveBlocks) {
-    if (!want.has(pub)) { elBlock.remove(); liveBlocks.delete(pub); }
+    if (!want.has(pub)) { elBlock.remove(); liveBlocks.delete(pub); markSwap(pub); }
   }
   if (!blockMode) return;
   for (const p of pendingLive) {
@@ -65,7 +65,7 @@ function syncLiveBlocks() {
       b.id = "liveblock-" + p.pub;
       liveBlocks.set(p.pub, b);
       zoomStage.appendChild(b);
-      enterAnim(b);
+      if (!wasSwapped(p.pub)) enterAnim(b);
     }
   }
 }
@@ -86,6 +86,18 @@ export function toggleZoom(key) {
 export function toggleGridView() {
   focusedKey = null;
   setBlockMode(!blockMode);
+}
+
+const recentSwap = new Map();
+
+function markSwap(pub) {
+  recentSwap.set(pub, Date.now());
+}
+
+function wasSwapped(pub) {
+  const ts = recentSwap.get(pub);
+  recentSwap.delete(pub);
+  return !!ts && Date.now() - ts < 1000;
 }
 
 function enterAnim(t) {
@@ -123,6 +135,7 @@ function setBlockMode(on) {
 
 export function removeVideo(key) {
   document.getElementById("tile-" + key)?.remove();
+  if (blockMode && key.startsWith("watch-")) markSwap(key.slice(6));
   if (focusedKey === key) focusedKey = null;
   updateZoomMode();
 }
