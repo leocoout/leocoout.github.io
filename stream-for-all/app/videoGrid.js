@@ -92,7 +92,7 @@ function fitStage() {
   const tiles = stageTiles();
   if (!tiles.length) return;
   const W = zoomStage.clientWidth;
-  const H = zoomStage.clientHeight;
+  const H = zoomStage.clientHeight - 78;
   const ratio = (t) => {
     const v = t.querySelector("video");
     return (v?.videoWidth || 1280) / (v?.videoHeight || 720);
