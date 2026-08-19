@@ -67,11 +67,11 @@ export function renderMemberSidebar(container, {
         Object.assign(btn.style, {
           display: "grid", placeItems: "center", width: "26px", height: "26px", padding: "0",
           flex: "0 0 auto", borderRadius: "var(--radius-sm)", border: "1px solid var(--border)",
-          background: "transparent", color: isWatching ? "var(--blue)" : "var(--muted-fg)",
+          background: "transparent", color: "var(--muted-fg)",
           cursor: "pointer"
         });
-        btn.onmouseenter = () => { btn.style.color = "var(--fg)"; };
-        btn.onmouseleave = () => { btn.style.color = isWatching ? "var(--blue)" : "var(--muted-fg)"; };
+        btn.onmouseenter = () => { btn.style.color = isWatching ? "var(--destructive)" : "var(--fg)"; };
+        btn.onmouseleave = () => { btn.style.color = "var(--muted-fg)"; };
         btn.onclick = () => (isWatching ? onStop(pub) : onWatch(pub));
         row.appendChild(btn);
       }
