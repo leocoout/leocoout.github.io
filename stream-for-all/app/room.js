@@ -44,6 +44,7 @@ for (const [wrap, maxWidth] of [[onboardWrap, "340px"], [roomPanel, "400px"]]) {
   Object.assign(footer.style, {
     width: "100%", maxWidth, marginTop: "12px", padding: "0 6px", boxSizing: "border-box"
   });
+  if (wrap === roomPanel) footer.id = "room-footer";
   wrap.appendChild(footer);
 }
 const grid = el("grid");
@@ -462,7 +463,7 @@ function renderMembers() {
 
 function renderSidebar() {
   if (!group || !id) return;
-  renderMemberSidebar(el("member-sidebar"), {
+  renderMemberSidebar(el("member-list"), {
     members, liveMembers, watching,
     online: new Set([...peerPub.values()].map((v) => v.pubId)),
     mePub: id.pubId, hostPub: group.founderPub,

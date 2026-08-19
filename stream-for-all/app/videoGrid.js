@@ -106,15 +106,20 @@ function updateZoomMode() {
     const roomActions = document.getElementById("room-actions");
     const headerActions = document.getElementById("header-actions");
     const header = document.getElementById("room-header");
+    const footer = document.getElementById("room-footer");
+    const sidebarFooter = document.getElementById("sidebar-footer");
+    const roomPanel = document.getElementById("room-panel");
     if (floating && roomActions && headerActions && header && roomCard) {
       if (blockMode) {
         floating.hidden = false;
         if (roomActions.parentElement !== floating) floating.appendChild(roomActions);
         if (headerActions.parentElement !== floating) floating.appendChild(headerActions);
+        if (footer && sidebarFooter && footer.parentElement !== sidebarFooter) sidebarFooter.appendChild(footer);
       } else {
         floating.hidden = true;
         if (roomActions.parentElement !== roomCard) roomCard.insertBefore(roomActions, document.getElementById("waiting"));
         if (headerActions.parentElement !== header) header.appendChild(headerActions);
+        if (footer && roomPanel && footer.parentElement !== roomPanel) roomPanel.appendChild(footer);
       }
     }
     if (blockMode) fitStage();

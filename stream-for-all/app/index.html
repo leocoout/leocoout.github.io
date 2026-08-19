@@ -37,9 +37,12 @@
     #member-sidebar { display: none; }
     #room-card.zoom-mode #stage { flex: 1; min-height: 0; display: flex; flex-direction: row; gap: 16px; margin-top: 14px; position: relative; }
     #room-card.zoom-mode #member-sidebar {
-      display: block; width: 210px; flex: 0 0 auto; overflow-y: auto;
+      display: flex; flex-direction: column; width: 210px; flex: 0 0 auto;
       border-right: 1px solid var(--border); padding-right: 14px;
     }
+    #room-card.zoom-mode #member-list { flex: 1; min-height: 0; overflow-y: auto; }
+    #room-card.zoom-mode #sidebar-footer { flex: 0 0 auto; padding-top: 12px; border-top: 1px solid var(--border); }
+    #room-card.zoom-mode #sidebar-footer #room-footer { margin-top: 0; padding: 0; }
     #room-card.zoom-mode #zoom-stage {
       flex: 1; min-height: 0; margin: 0;
       display: flex; flex-wrap: wrap;
@@ -113,7 +116,10 @@
         <div id="header-actions"></div>
       </div>
       <div id="stage">
-        <div id="member-sidebar"></div>
+        <div id="member-sidebar">
+          <div id="member-list"></div>
+          <div id="sidebar-footer"></div>
+        </div>
         <div id="zoom-stage" hidden></div>
         <div id="floating-controls" hidden></div>
         <div id="grid"></div>
