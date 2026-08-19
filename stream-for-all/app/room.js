@@ -16,7 +16,7 @@ import { BgPattern } from "./components/BgPattern.js";
 import { FooterMeta } from "./components/FooterMeta.js";
 import { toast } from "./components/Toast.js";
 import { renderDevPanel } from "./components/DevPanel.js";
-import { loadGroups, saveGroup, createHostGroup, joinFromInvite } from "./groups.js";
+import { loadGroups, saveGroup, deleteGroup, createHostGroup, joinFromInvite } from "./groups.js";
 import { MOCK_NAMES, MOCK_COLORS, MOCK_PRESETS, installChromeStub, clampScene, mockStream } from "./mock.js";
 import { T } from "./strings.js";
 import { LINKS } from "./config.js";
@@ -161,7 +161,14 @@ async function enterGroup(g) {
   const watch = room.makeAction("watch");
   const viewers = room.makeAction("view");
   const pings = room.makeAction("pings");
-  actions = { chal, rost, live, watch, viewers, pings };
+  const end = room.makeAction("end");
+  actions = { chal, rost, live, watch, viewers, pings, end };
+
+  end.onMessage = (msg, { peerId }) => {
+    const info = peerPub.get(peerId);
+    if (!info || info.pubId !== group.founderPub) return;
+    exitRoom(T.room.roomEnded);
+  };
 
   pings.onMessage = (msg, { peerId }) => {
     const info = peerPub.get(peerId);
@@ -511,10 +518,35 @@ function updateStreamControls() {
 }
 
 function roomMenuItems() {
+  const amHost = id.pubId === group.founderPub;
   return [
     { label: T.room.sound, selected: soundEnabled(), keepOpen: true, onClick: () => setSoundEnabled(!soundEnabled()) },
-    { label: T.room.copyInvite, onClick: copyInvite }
+    { label: T.room.copyInvite, onClick: copyInvite },
+    { label: amHost ? T.room.endRoom : T.room.leaveRoom, onClick: leaveRoom }
   ];
+}
+
+async function leaveRoom() {
+  const amHost = id.pubId === group.founderPub;
+  if (!confirm(amHost ? T.room.endRoomConfirm : T.room.leaveRoomConfirm)) return;
+  if (amHost && !MOCK) {
+    try { await actions.end.send({}); } catch {}
+  }
+  await exitRoom();
+}
+
+async function exitRoom(message) {
+  stopShare();
+  if (!MOCK) {
+    try { room?.leave(); } catch {}
+    room = null;
+    await deleteGroup(group.groupId);
+  }
+  if (message) toast(message);
+  setTimeout(() => {
+    window.close();
+    location.href = "room.html";
+  }, message ? 1500 : 0);
 }
 
 
