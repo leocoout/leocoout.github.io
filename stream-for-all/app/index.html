@@ -97,7 +97,15 @@
     #room-card.zoom-mode #thumbs-wrap { display: none !important; }
     #room-card.zoom-mode #room-actions { margin-top: 0; flex: 0 0 auto; }
     #room-card.zoom-mode #sidebar-controls #header-actions { width: 100%; justify-content: space-between; }
-    #room-card.zoom-mode #share { flex: 1; padding: 8px 12px; font-size: 13px; font-weight: 600; height: 36px; box-sizing: border-box; }
+    #room-card.zoom-mode #sidebar-controls #header-actions button,
+    #room-card.zoom-mode #sidebar-controls #stream-settings-slot button {
+      width: 40px !important; height: 40px !important;
+      box-sizing: border-box; border-radius: var(--radius);
+    }
+    #room-card.zoom-mode #share {
+      flex: 1; height: 40px; padding: 0 12px; font-size: 13px; font-weight: 600;
+      box-sizing: border-box; border-radius: var(--radius);
+    }
     #thumbs.blocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     #empty-hint { color: var(--muted-fg); font-size: 13px; text-align: center; padding: 24px 0; }
 
