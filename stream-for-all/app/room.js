@@ -522,7 +522,7 @@ function roomMenuItems() {
   return [
     { label: T.room.sound, selected: soundEnabled(), keepOpen: true, onClick: () => setSoundEnabled(!soundEnabled()) },
     { label: T.room.copyInvite, onClick: copyInvite },
-    { label: amHost ? T.room.endRoom : T.room.leaveRoom, onClick: leaveRoom }
+    { label: amHost ? T.room.endRoom : T.room.leaveRoom, danger: true, onClick: leaveRoom }
   ];
 }
 

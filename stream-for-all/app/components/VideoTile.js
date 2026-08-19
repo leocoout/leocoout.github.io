@@ -38,21 +38,21 @@ export function VideoTile({ id, label, stream, muted = false, onStop = null, onZ
     position: "absolute", bottom: "8px", right: "8px", display: "flex", gap: "6px"
   });
 
-  const overlay = (btn) => Object.assign(btn.style, {
-    width: "30px", height: "30px", background: "rgba(0,0,0,.55)", borderColor: "transparent", color: "#fff"
-  });
+  const overlay = (btn) => {
+    const rest = () => Object.assign(btn.style, {
+      background: "rgba(0,0,0,.55)", borderColor: "transparent", color: "#fff"
+    });
+    Object.assign(btn.style, { width: "30px", height: "30px" });
+    rest();
+    btn.onmouseenter = () => { btn.style.background = "rgba(0,0,0,.85)"; btn.style.color = "#fff"; btn.style.borderColor = "transparent"; };
+    btn.onmouseleave = rest;
+  };
 
   let zoomBtn = null;
   if (onZoom) {
     zoomBtn = IconButton("maximize", { size: 15, title: T.room.expand, onClick: () => onZoom() });
     overlay(zoomBtn);
     controls.appendChild(zoomBtn);
-  }
-
-  if (onStop) {
-    const stopBtn = IconButton("x", { size: 15, title: T.room.stopWatching, onClick: () => onStop() });
-    overlay(stopBtn);
-    controls.appendChild(stopBtn);
   }
 
   const pip = IconButton("pip", {
@@ -62,6 +62,12 @@ export function VideoTile({ id, label, stream, muted = false, onStop = null, onZ
   });
   overlay(pip);
   controls.appendChild(pip);
+
+  if (onStop) {
+    const stopBtn = IconButton("log-out", { size: 15, title: T.room.stopWatching, onClick: () => onStop() });
+    overlay(stopBtn);
+    controls.appendChild(stopBtn);
+  }
 
   tile.append(video, live, viewersEl, name, controls);
   tile.setViewers = (list) => viewersEl.replaceChildren(ViewerStack(list || []));
