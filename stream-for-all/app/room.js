@@ -6,7 +6,7 @@ import {
 import { Onboarding } from "./onboarding.js";
 import { MemberRow } from "./components/MemberRow.js";
 import { ApprovalRow } from "./components/ApprovalRow.js";
-import { initVideoGrid, attachVideo, removeVideo, updateEmpty, toggleGridView, setPendingLive } from "./videoGrid.js";
+import { initVideoGrid, attachVideo, removeVideo, clearVideos, updateEmpty, toggleGridView, setPendingLive } from "./videoGrid.js";
 import { IconButton } from "./components/IconButton.js";
 import { openMenu } from "./components/Menu.js";
 import { LiveBlock } from "./components/LiveBlock.js";
@@ -617,7 +617,7 @@ function applyScene() {
   mockStreams.clear();
   viewersByStreamer.clear();
   pingMs.clear();
-  grid.innerHTML = "";
+  clearVideos();
   localStream = null;
   shareBtn.textContent = T.room.shareScreen;
   shareBtn.classList.remove("danger");

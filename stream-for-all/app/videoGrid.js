@@ -133,6 +133,12 @@ function setBlockMode(on) {
   updateZoomMode();
 }
 
+export function clearVideos() {
+  for (const t of [...stageTiles(), ...grid.children]) t.remove();
+  focusedKey = null;
+  updateZoomMode();
+}
+
 export function removeVideo(key) {
   document.getElementById("tile-" + key)?.remove();
   if (blockMode && key.startsWith("watch-")) markSwap(key.slice(6));
