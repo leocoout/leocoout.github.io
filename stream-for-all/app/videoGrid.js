@@ -203,7 +203,9 @@ function fitStage() {
   if (rest.length) placeColumn(rest, mainW + GAP * 2, colW, H);
 
   for (const t of tiles) {
-    t.setZoomVisible?.(!(main.length === 1 && main[0] === t));
+    if (focused && t === focused) t.setZoomVisible?.(rest.length > 0);
+    else if (main.length === 1 && main[0] === t) t.setZoomVisible?.(false);
+    else t.setZoomVisible?.(true);
   }
 }
 
