@@ -42,6 +42,10 @@ export function attachVideo(key, label, stream, muted = false, { onStop = null, 
   const video = tile.querySelector("video");
   if (document.hidden) video.autoplay = false;
   video.addEventListener("loadedmetadata", fitStage);
+  if (zoomable) {
+    tile.dataset.zoomable = "1";
+    tile.addEventListener("click", () => { if (blockMode) toggleZoom(key); });
+  }
   (blockMode ? zoomStage : grid).appendChild(tile);
   if (blockMode && !(key.startsWith("watch-") && wasSwapped(key.slice(6)))) enterAnim(tile);
   updateZoomMode();
@@ -255,6 +259,7 @@ function updateZoomMode() {
     roomCard?.classList.toggle("zoom-mode", blockMode);
     for (const t of [...stageTiles(), ...grid.children]) {
       t.setZoomed?.(blockMode && t.id === "tile-" + focusedKey);
+      t.style.cursor = blockMode && t.dataset.zoomable ? "pointer" : "";
     }
     const sidebarControls = document.getElementById("sidebar-controls");
     const roomActions = document.getElementById("room-actions");
