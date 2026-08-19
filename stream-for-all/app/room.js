@@ -6,7 +6,7 @@ import {
 import { Onboarding } from "./onboarding.js";
 import { MemberRow } from "./components/MemberRow.js";
 import { ApprovalRow } from "./components/ApprovalRow.js";
-import { initVideoGrid, attachVideo, removeVideo, updateEmpty, toggleZoom } from "./videoGrid.js";
+import { initVideoGrid, attachVideo, removeVideo, updateEmpty, toggleGridView } from "./videoGrid.js";
 import { IconButton } from "./components/IconButton.js";
 import { openMenu } from "./components/Menu.js";
 import { LiveBlock } from "./components/LiveBlock.js";
@@ -517,7 +517,7 @@ function setupRoomChrome() {
   if (roomChromeReady) return;
   roomChromeReady = true;
   const actionsWrap = el("header-actions");
-  const gridBtn = IconButton("layout-grid", { title: T.room.gridView, onClick: () => toggleZoom() });
+  const gridBtn = IconButton("layout-grid", { title: T.room.gridView, onClick: () => toggleGridView() });
   actionsWrap.appendChild(gridBtn);
   membersBtn = IconButton("users", { title: T.room.members, onClick: openMembersSheet });
   invitesBtn = IconButton("user-plus", { title: T.room.requests, onClick: openApprovalsSheet });
