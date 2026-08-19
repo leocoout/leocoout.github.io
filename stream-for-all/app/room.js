@@ -16,6 +16,7 @@ import { BgPattern } from "./components/BgPattern.js";
 import { FooterMeta } from "./components/FooterMeta.js";
 import { toast } from "./components/Toast.js";
 import { renderDevPanel } from "./components/DevPanel.js";
+import { renderMemberSidebar } from "./components/MemberSidebar.js";
 import { loadGroups, saveGroup, deleteGroup, createHostGroup, joinFromInvite } from "./groups.js";
 import { MOCK_NAMES, MOCK_COLORS, MOCK_PRESETS, installChromeStub, clampScene, mockStream } from "./mock.js";
 import { T } from "./strings.js";
@@ -449,12 +450,24 @@ function renderLive() {
     const name = members.get(pub) || "friend";
     thumbs.appendChild(LiveBlock({ name, pub, onWatch: () => startWatch(pub) }));
   }
+  renderSidebar();
   updateEmpty();
 }
 
 function renderMembers() {
   if (membersBtn) membersBtn.title = `${T.room.members} (${members.size})`;
   if (openSheetKind === "members" && isSheetOpen()) openMembersSheet();
+  renderSidebar();
+}
+
+function renderSidebar() {
+  if (!group || !id) return;
+  renderMemberSidebar(el("member-sidebar"), {
+    members, liveMembers, watching,
+    online: new Set([...peerPub.values()].map((v) => v.pubId)),
+    mePub: id.pubId, hostPub: group.founderPub,
+    onWatch: startWatch, onStop: stopWatch
+  });
 }
 
 function renderApprovals() {

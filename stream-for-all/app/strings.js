@@ -33,6 +33,7 @@ export const T = {
     noRequests: "Nenhum pedido pendente.",
     approve: "Aprovar",
     clickToWatch: "Clique para assistir",
+    watch: "Assistir",
     stopWatching: "Parar de assistir",
     expand: "Ampliar",
     shrink: "Reduzir",
