@@ -3,24 +3,30 @@ const EXTENSION_ID = "";
 
 const msg = document.getElementById("msg");
 const store = document.getElementById("store");
+const open = document.getElementById("open");
 
 const code = (location.hash.slice(1) || new URLSearchParams(location.search).get("join") || "").trim();
+const appUrl = code ? "app/?join=" + encodeURIComponent(code) : "app/";
 
-function showInstall() {
-  if (STORE_URL) {
-    location.href = STORE_URL;
+function showWeb() {
+  if (code) {
+    location.href = appUrl;
     return;
   }
-  msg.textContent = "Instale a extensão Stream for All para abrir esta sala.";
-  store.hidden = false;
-  store.href = "#";
+  msg.textContent = "Use no navegador ou instale a extensão.";
+  open.hidden = false;
+  open.href = appUrl;
+  if (STORE_URL) {
+    store.hidden = false;
+    store.href = STORE_URL;
+  }
 }
 
 if (EXTENSION_ID && window.chrome?.runtime?.sendMessage) {
   chrome.runtime.sendMessage(EXTENSION_ID, { type: "sfa-open", join: code }, (res) => {
-    if (chrome.runtime.lastError || !res?.installed) showInstall();
+    if (chrome.runtime.lastError || !res?.installed) showWeb();
     else msg.textContent = "Abrindo a sala no app…";
   });
 } else {
-  showInstall();
+  showWeb();
 }
