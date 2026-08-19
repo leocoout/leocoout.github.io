@@ -39,7 +39,7 @@ export const T = {
     expand: "Ampliar",
     shrink: "Reduzir",
     live: "Ao vivo",
-    host: "Anfitrião",
+    host: "Host",
     ping: (ms) => `${ms} ms`,
     sound: "Som",
     copyInvite: "Copiar link de convite",
