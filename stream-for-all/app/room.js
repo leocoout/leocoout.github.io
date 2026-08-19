@@ -86,7 +86,7 @@ const MOCK = params.has("mock");
 let scene = null;
 if (typeof chrome === "undefined" || !chrome.storage) installChromeStub();
 initStreamQuality(() => localStream);
-initVideoGrid({ grid, emptyHint, thumbs });
+initVideoGrid({ grid, emptyHint, thumbs, roomCard: el("room-card"), zoomStage: el("zoom-stage") });
 
 init();
 
@@ -407,9 +407,10 @@ function stopWatch(pub, silent = false) {
 }
 
 function attachWatched(pub, name, stream) {
-  attachVideo("watch-" + pub, name, stream, false);
-  const tile = el("tile-watch-" + pub);
-  if (tile) { tile.style.cursor = "pointer"; tile.title = T.room.stopWatching; tile.onclick = () => stopWatch(pub); }
+  attachVideo("watch-" + pub, name, stream, false, {
+    onStop: () => stopWatch(pub),
+    zoomable: true
+  });
   updateTileViewers(pub);
 }
 
