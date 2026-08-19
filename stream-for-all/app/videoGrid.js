@@ -87,7 +87,7 @@ export function toggleGridView() {
 }
 
 function clearInline(t) {
-  t.style.position = ""; t.style.left = ""; t.style.top = "";
+  t.style.position = "relative"; t.style.left = ""; t.style.top = "";
   t.style.width = ""; t.style.height = ""; t.style.flex = ""; t.style.order = "";
 }
 
