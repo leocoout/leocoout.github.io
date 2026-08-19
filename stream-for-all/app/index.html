@@ -104,8 +104,28 @@
     }
     #room-card.zoom-mode #thumbs-wrap { display: none !important; }
     #room-card.zoom-mode #room-actions { margin-top: 0; flex: 0 0 auto; }
-    #room-card.zoom-mode #sidebar-controls #header-actions { width: 100%; justify-content: space-between; }
-    #room-card.zoom-mode #sidebar-controls #header-actions button,
+    #room-card.zoom-mode #sidebar-controls #header-actions {
+      width: 100%; gap: 0;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--card);
+    }
+    #room-card.zoom-mode #sidebar-controls #header-actions button {
+      flex: 1 1 0 !important; width: auto !important; height: 38px !important;
+      border: none !important; border-radius: 0 !important;
+      border-left: 1px solid var(--border) !important;
+      background: transparent !important;
+    }
+    #room-card.zoom-mode #sidebar-controls #header-actions button:hover {
+      background: var(--muted) !important;
+    }
+    #room-card.zoom-mode #sidebar-controls #header-actions button:first-child {
+      border-left: none !important;
+      border-radius: var(--radius) 0 0 var(--radius) !important;
+    }
+    #room-card.zoom-mode #sidebar-controls #header-actions button:last-child {
+      border-radius: 0 var(--radius) var(--radius) 0 !important;
+    }
+    #room-card.zoom-mode #sidebar-controls #header-actions button > span { z-index: 1; }
     #room-card.zoom-mode #sidebar-controls #stream-settings-slot button {
       width: 40px !important; height: 40px !important;
       box-sizing: border-box; border-radius: var(--radius);
